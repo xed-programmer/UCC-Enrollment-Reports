@@ -31,7 +31,7 @@ def create_report(data):
 
 
 try:
-    con_string = r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=src\Database1.accdb;"
+    con_string = r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=src\Database.accdb;"
     conn = pyodbc.connect(con_string)
     print('Connected to database')
 

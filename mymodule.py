@@ -26,13 +26,10 @@ class EnrollmentReport:
 
         for i in range(row_start_num, tot_sub + 1):
             col_num = 3
-            col_year = 3
             prev_year = ''
             for d in data:
                 if d[0] == ws.cell(i, 1).value:
                     prev_year = d[0]
-                    while d[1][0] != str(math.floor(col_year / 6) + 1):
-                        col_year += 6
                     while d[2] != ws.cell(row_section, col_num).value:
                         col_num += 2
                     ws.cell(i, col_num).value = d[3]
@@ -55,14 +52,26 @@ class EnrollmentReport:
         ws['A3'].value = self.config['semester'] + ws['A3'].value + " " + header_date
 
         row_start_num = 7
+        row_sex = 6
         tot_sub = 36
 
         for i in range(row_start_num, tot_sub + 1):
             col_num = 3
+            col_year = 3
+            prev_year = ''
             for d in data:
                 if d[0] == ws.cell(i, 1).value:
+                    prev_year = d[0]
+                    while d[1][0] != str(math.floor(col_year/4)+1):
+                        col_year += 4
+
+                    col_num = col_year
+                    while d[2] != ws.cell(row_sex, col_num).value:
+                        col_num += 2
                     ws.cell(i, col_num).value = d[3]
                     col_num += 2
+                elif prev_year != '':
+                    break
 
         # Save file
         wb.save('src/' + date + filename)

@@ -1,7 +1,5 @@
 {
-  "database_path": "src/Database.accdb",
+  "database_path": "C:/Users/owner/Desktop/Databases/north.accdb",
   "semester": "1ST SEMESTER",
-  "format-by-section": "ENROLLMENT-MATRIX-BY-SECTION.xlsx",
-  "format-by-sex": "ENROLLMENT-MATRIX-BY-SEX.xlsx",
-  "format-by-stud-info": "Form-3-ENROLLMENT-LIST-FORMAT.xlsx"
+  "forms": ["Form-1.xlsx", "Form-2.xlsx", "Form-3.xlsx"]
 }

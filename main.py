@@ -33,21 +33,22 @@ def create_report(data):
 try:
     con_string = r"DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=src\Database.accdb;"
     conn = pyodbc.connect(con_string)
+    table_name = input('Enter table name: ')
     print('Connected to database')
 
     cur = conn.cursor()
-    cur.execute('SELECT COURSE, YEAR1, SEX, COUNT(SEX) FROM student WHERE SEX <> null GROUP BY COURSE, YEAR1, SEX')
+    cur.execute('SELECT COURSE, YEAR1, SEX, COUNT(SEX) FROM ', table_name, ' WHERE SEX <> null GROUP BY COURSE, YEAR1, SEX')
     # cur.execute('SELECT COURSE FROM student GROUP BY COURSE')
 
     row = cur.fetchall()
     create_report(row)
 
     # Check for null value in SEX Column
-    cur.execute('SELECT COURSE, YEAR1, COUNT(STUDE_NO) FROM student WHERE SEX IS NULL GROUP BY COURSE, YEAR1, SEX')
+    cur.execute('SELECT COURSE, YEAR1, COUNT(STUDE_NO) FROM ', table_name, ' WHERE SEX IS NULL GROUP BY COURSE, YEAR1, SEX')
     row = cur.fetchall()
     if len(row) > 0:
-        print(f'There are {len(row)} records that is not include in report because they dont have value in SEX Column. Please '
-              f'check the database')
+        print(f'There are {len(row)} records that is not include in report because they dont have value in SEX Column. '
+              f'Please check the database')
         for r in row:
             print(r)
 
@@ -57,4 +58,6 @@ try:
 
 except pyodbc.Error as e:
     print("Error in connection", e)
+    input('>> press any key to exit...')
+    exit()
 

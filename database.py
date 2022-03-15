@@ -23,5 +23,7 @@ def get_data(sql):
 
     except pyodbc.Error as e:
         print("Error in connection", e)
+        input('>> press enter key to exit...')
+        exit()
     else:
         return row

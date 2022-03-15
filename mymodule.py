@@ -11,14 +11,14 @@ class EnrollmentReport:
         self.config = config
 
     def create_report_by_section(self, data):
-        filename = self.config['format-by-section']
         date = datetime.datetime.now().strftime('%b-%d-%Y-')
+        filename = self.config['forms'][0]
         header_date = datetime.datetime.now().strftime('%B, %d %Y ').upper()
 
         wb = load_workbook('src/' + filename)
         ws = wb.active
         # set the header
-        ws['A3'].value = self.config['semester'] + ws['A3'].value + " " + header_date
+        ws['A3'].value = self.config['semester'] + " " + ws['A3'].value + " " + header_date
 
         row_start_num = 7
         row_section = 6
@@ -42,7 +42,7 @@ class EnrollmentReport:
         return True
 
     def create_report_by_sex(self, data):
-        filename = self.config['format-by-sex']
+        filename = self.config['forms'][1]
         date = datetime.datetime.now().strftime('%b-%d-%Y-')
         header_date = datetime.datetime.now().strftime('%B, %d %Y ').upper()
 
@@ -79,7 +79,7 @@ class EnrollmentReport:
 
     def __create_new_sheet(self, subject, year):
         file = 'src/'
-        filename = self.config['format-by-stud-info']
+        filename = self.config['forms'][2]
         newfilename = self.date + filename
         if os.path.exists(file + newfilename):
             file += newfilename
@@ -97,7 +97,7 @@ class EnrollmentReport:
         wb1.save('src/' + newfilename)
 
     def create_student_list(self, data):
-        filename = self.config['format-by-stud-info']
+        filename = self.config['forms'][2]
         newfilename = self.date + filename
 
         self.__create_new_sheet(data[0][0], data[0][1])
@@ -130,16 +130,17 @@ class EnrollmentReport:
                         ws.cell(i, j).value = count
                         count += 1
                     elif j >= 8 and j <= 17:
-                        ws.cell(i, j).value = d[j + 20] + " - " + d[j]
+                        sub = d[j] if d[j] is not None else "*"
+                        sub_code = d[j + 20] if d[j + 20] is not None else "*"
+                        ws.cell(i, j).value = sub_code + " - " + sub
                     elif j != max_col - 1:
                         ws.cell(i, j).value = d[j]
                     else:
                         tot_unit = 0
                         # add each unit
                         for k in range(10):
-                            tot_unit += d[j + k]
+                            tot_unit += d[j + k] if d[j + k] is not None else 0
                         ws.cell(i, j).value = tot_unit
-                print('Data added')
                 data = data[1:]
             else:
 
@@ -153,10 +154,18 @@ class EnrollmentReport:
                     self.create_student_list(data)
             i += 1
         if len(data) > 0:
+            ws.cell(i + 2, 1).value = 'PREPARED BY: '
+            ws.cell(i + 2, 7).value = 'CERTIFIED CORRECT BY: '
+            ws.cell(i + 4, 7).value = 'NAME OF REGISTRAR'
+            ws.cell(i + 5, 7).value = 'POSITION'
             # Save file
             wb.save('src/' + newfilename)
             self.create_student_list(data)
         else:
+            ws.cell(i + 2, 1).value = 'PREPARED BY: '
+            ws.cell(i + 2, 7).value = 'CERTIFIED CORRECT BY: '
+            ws.cell(i + 4, 7).value = 'NAME OF REGISTRAR'
+            ws.cell(i + 5, 7).value = 'POSITION'
             # Save file
             wb.save('src/' + newfilename)
             print('>> Report successfully created!')
